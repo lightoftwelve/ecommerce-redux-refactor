@@ -1,16 +1,44 @@
-import { Link } from 'react-router-dom';
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
-import { useQuery } from '@apollo/client';
-import { QUERY_USER } from '../utils/queries';
+// Importing the fetchUser thunk for asynchronous actions
+import { fetchUser } from "../redux/slices/userSlice";
 
 function OrderHistory() {
-  const { data } = useQuery(QUERY_USER);
-  let user;
+  const dispatch = useDispatch(); // Hook to access the Redux dispatch function
 
-  if (data) {
-    user = data.user;
+  // Selecting user, status, and error from the user state in the Redux store
+  const user = useSelector((state) => state.user.user);
+  const status = useSelector((state) => state.user.status);
+  const error = useSelector((state) => state.user.error);
+
+  // Using useEffect to dispatch fetchUser action when the component mounts
+  useEffect(() => {
+    // Only fetch user if the status is 'idle'
+    if (status === "idle") {
+      dispatch(fetchUser());
+    }
+  }, [status, dispatch]);
+
+  // If there is no user, inform the user to log in
+  if (!user) {
+    return (
+      <div className="container my-1">
+        <Link to="/">← Back to Products</Link>
+        <h2>You need to be logged in to view this page.</h2>
+      </div>
+    );
   }
 
+  // Loading and error states
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  } else if (status === "failed") {
+    return <div>Error: {error}</div>;
+  }
+
+  // If user is logged in, display their order history
   return (
     <>
       <div className="container my-1">
