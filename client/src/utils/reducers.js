@@ -8,13 +8,12 @@ import {
   UPDATE_CURRENT_CATEGORY,
   CLEAR_CART,
   TOGGLE_CART,
-} from './actions';
+} from "./actions";
 
-// TODO: To get a better understand of how a reducer works - add comments to the various actions in the reducer
+// The reducer is a function that takes the current state and an action as arguments, and returns a new state result.
 export const reducer = (state, action) => {
   switch (action.type) {
-    // TODO: Add a comment describing the functionality of the UPDATE_PRODUCTS case
-    // Your comment here
+    // UPDATE_PRODUCTS: Updates the products array in the state with new product data. This is typically used to set the products after fetching them from a database.
     case UPDATE_PRODUCTS:
       return {
         ...state,
@@ -33,8 +32,8 @@ export const reducer = (state, action) => {
         ...state,
         cart: [...state.cart, ...action.products],
       };
-    // TODO: Add a comment describing the functionality of the UPDATE_CART_QUANTITY case
-    // Your comment here
+
+    // UPDATE_CART_QUANTITY: Updates the quantity of a product in the cart. This is used when a user changes the quantity of a product they want to purchase.
     case UPDATE_CART_QUANTITY:
       return {
         ...state,
@@ -47,8 +46,7 @@ export const reducer = (state, action) => {
         }),
       };
 
-    // TODO: Add a comment describing the functionality of the REMOVE_FROM_CART case
-    // Your comment here
+    // REMOVE_FROM_CART: Removes a product from the cart based on the product's _id. If the cart is empty after removal, set cartOpen to false.
     case REMOVE_FROM_CART:
       let newState = state.cart.filter((product) => {
         return product._id !== action._id;
@@ -85,8 +83,7 @@ export const reducer = (state, action) => {
         currentCategory: action.currentCategory,
       };
 
-    // TODO: Add a comment describing what the default case is for
-    // Your comment here
+    // DEFAULT: If the action type does not match any of the cases, return the current state unchanged. This is important for ensuring that unknown actions do not modify the state.
     default:
       return state;
   }
