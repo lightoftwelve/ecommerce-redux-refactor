@@ -1,5 +1,8 @@
-const mongoose = require('mongoose');
+require("dotenv").config();
+const { connect, connection } = require("mongoose");
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mern-shopping');
+const connectionString = process.env.MONGODB_URI;
 
-module.exports = mongoose.connection;
+connect(connectionString);
+
+module.exports = connection;
