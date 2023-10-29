@@ -39,7 +39,7 @@ Welcome to Shop-Shop, a cutting-edge e-commerce platform offering a wide range o
 
 ## Live Demo
 
-Check out the live version of this project [here](https://victoria-alawi-portfolio.netlify.app/).
+Check out the live version of this project [here](https://shop-shop-redux-refactor-36970616f69a.herokuapp.com/).
 
 ## Credits
 
