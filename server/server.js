@@ -17,7 +17,11 @@ const server = new ApolloServer({
 });
 
 // CORS middleware
-const whitelist = ["http://localhost:3000", "http://localhost:3001"];
+const whitelist = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://shop-shop-redux-refactor-36970616f69a.herokuapp.com",
+];
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
