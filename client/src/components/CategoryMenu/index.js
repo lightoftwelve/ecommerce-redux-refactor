@@ -1,46 +1,44 @@
-import { useEffect } from 'react';
-import { useQuery } from '@apollo/client';
-import { useStoreContext } from '../../utils/GlobalState';
+import { useEffect } from "react";
+import { useQuery } from "@apollo/client";
+
+// Import Redux
+import { useDispatch, useSelector } from "react-redux";
 import {
-  UPDATE_CATEGORIES,
-  UPDATE_CURRENT_CATEGORY,
-} from '../../utils/actions';
-import { QUERY_CATEGORIES } from '../../utils/queries';
-import { idbPromise } from '../../utils/helpers';
+  updateCategories,
+  updateCurrentCategory,
+} from "../../redux/slices/categorySlice";
+
+import { QUERY_CATEGORIES } from "../../utils/queries";
+import { idbPromise } from "../../utils/helpers";
 
 function CategoryMenu() {
-  const [state, dispatch] = useStoreContext();
+  const dispatch = useDispatch(); // Using useDispatch to create dispatch function for Redux
+  const categories = useSelector((state) => state.category.categories); // Using useSelector to access categories from the Redux store
+  const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES); // Using Apollo Client's useQuery hook to fetch categories from the server
 
-  const { categories } = state;
-
-  const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES);
-
+  // useEffect hook to handle side effects
   useEffect(() => {
+    // If category data is available, update the categories in the Redux store and save them to IndexedDB
     if (categoryData) {
-      dispatch({
-        type: UPDATE_CATEGORIES,
-        categories: categoryData.categories,
-      });
+      dispatch(updateCategories(categoryData.categories));
       categoryData.categories.forEach((category) => {
-        idbPromise('categories', 'put', category);
+        idbPromise("categories", "put", category);
       });
-    } else if (!loading) {
-      idbPromise('categories', 'get').then((categories) => {
-        dispatch({
-          type: UPDATE_CATEGORIES,
-          categories: categories,
-        });
+    }
+    // If category data is not loading but not available, fetch categories from IndexedDB and update the Redux store
+    else if (!loading) {
+      idbPromise("categories", "get").then((categories) => {
+        dispatch(updateCategories(categories));
       });
     }
   }, [categoryData, loading, dispatch]);
 
+  // Function to handle category selection
   const handleClick = (id) => {
-    dispatch({
-      type: UPDATE_CURRENT_CATEGORY,
-      currentCategory: id,
-    });
+    dispatch(updateCurrentCategory(id));
   };
 
+  // Rendering the CategoryMenu component
   return (
     <div>
       <h2>Choose a Category:</h2>
